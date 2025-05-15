@@ -15,7 +15,6 @@ class database{
 
         try{
             $con->beginTransaction();
-
             $stmt = $con->prepare("INSERT INTO Admin (admin_FN, admin_LN, admin_username, admin_password) VALUES (?, ?, ?, ?)");
             $stmt->execute([$firstname, $lastname, $username, $password]);
 
@@ -31,5 +30,17 @@ class database{
             $con->rollBack();
             return false;
         }
+    }
+
+    function isUsernameExists($username) {
+        $con = $this->opencon();
+        $stmt = $con->prepare("SELECT COUNT(*) FROM Admin WHERE admin_username = ?");
+        $stmt->execute([$username]);
+
+        // fetches the result of the sql query. fetchColumn() returns the first column of the first row-in this case, the number of matching records.
+        $count = $stmt->fetchColumn();
+
+        //returns true if one or more records were found(i.e., te username already exists)
+        return $count > 0;
     }
 }
