@@ -85,6 +85,7 @@ if (isset($_POST['register'])){
         <div class="invalid-feedback">Password must be at least 6 characters long, include an uppercase letter, a number, and a special character.</div>      
       </div>
       <button id= "registerButton" type="submit" name="register" class="btn btn-primary w-100">Register</button>
+      
     </form>
   </div>
   

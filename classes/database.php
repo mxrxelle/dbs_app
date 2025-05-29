@@ -55,4 +55,19 @@ class database{
         //returns true if one or more records were found(i.e., the email already exists)
         return $count > 0;
     }
+
+    function loginUser($username, $password){
+        $con = $this->opencon();
+        $stmt = $con->prepare("SELECT * FROM Admin WHERE admin_username = ?"); //? stands for placeholder
+        $stmt->execute([$username]);
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['admin_password'])){
+
+            return $user;
+        }
+
+
+    }
 }
