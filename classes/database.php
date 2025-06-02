@@ -70,4 +70,64 @@ class database{
 
 
     }
+    function addStudent($firstname, $lastname, $email, $admin_id){
+        $con = $this->opencon();
+
+        try{
+            $con->beginTransaction();
+
+            $stmt = $con->prepare("INSERT INTO students (student_FN, student_LN, student_email, admin_id) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$firstname, $lastname, $email, $admin_id]);
+
+            $userID = $con->lastInsertID();
+            $con->commit();
+
+            return $userID;
+        }catch(PDOException $e){
+
+
+            $con->rollBack();
+            return false;
+
+
+        }
+
+    }
+
+    function addCourses($course_name, $admin_id){
+        $con = $this->opencon();
+
+        try{
+            $con->beginTransaction();
+
+            $stmt = $con->prepare("INSERT INTO courses (course_name, admin_id) VALUES (?, ?)");
+            $stmt->execute([$course_name, $admin_id]);
+
+            $userID = $con->lastInsertID();
+            $con->commit();
+
+            return $userID;
+        }catch(PDOException $e){
+
+
+            $con->rollBack();
+            return false;
+
+
+        }
+
+    }
+
+    function isCourseExists($course_name){
+        $con = $this->opencon();
+        $stmt = $con->prepare("SELECT COUNT(*) FROM courses WHERE course_name = ?");
+        $stmt->execute([$course_name]);
+
+        // fetches the result of the sql query. fetchColumn() returns the first column of the first row-in this case, the number of matching records.
+        $count = $stmt->fetchColumn();
+
+        //returns true if one or more records were found(i.e., the email already exists)
+        return $count;
+    }
+
 }
