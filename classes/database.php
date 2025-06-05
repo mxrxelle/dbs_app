@@ -130,4 +130,70 @@ class database{
         return $count;
     }
 
+    function getStudents(){
+        $con = $this->opencon();
+
+        return $con->query("SELECT * FROM students")->fetchAll();
+    }
+
+    function getStudentById($student_id){
+        $con = $this->opencon();
+
+        $stmt = $con->prepare("SELECT * FROM students WHERE student_id = ?");
+        $stmt->execute([$student_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    function updateStudent($student_FN, $student_LN, $student_email, $student_id){
+        try{
+
+            $con = $this->opencon();
+            $con->beginTransaction();
+
+            $stmt = $con->prepare("UPDATE students SET student_FN=?, student_LN=?, student_email=? WHERE student_id=?");
+            $stmt->execute([$student_FN, $student_LN, $student_email, $student_id]);
+
+            $con->commit();
+            return true;
+        }catch(PDOException $e){
+            $con->rollBack();
+            return false;
+
+        }
+        
+    }
+
+    function getCourses(){
+        $con = $this->opencon();
+
+        return $con->query("SELECT * FROM courses")->fetchAll();
+    }
+
+    function getCourseById($course_id){
+        $con = $this->opencon();
+
+        $stmt = $con->prepare("SELECT * FROM courses WHERE course_id = ?");
+        $stmt->execute([$course_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    function updateCourse($course_name, $course_id){
+        try{
+
+            $con = $this->opencon();
+            $con->beginTransaction();
+
+            $stmt = $con->prepare("UPDATE courses SET course_name=? WHERE course_id=?");
+            $stmt->execute([$course_name, $course_id]);
+
+            $con->commit();
+            return true;
+        }catch(PDOException $e){
+            $con->rollBack();
+            return false;
+
+        }
+        
+    }
+
 }
